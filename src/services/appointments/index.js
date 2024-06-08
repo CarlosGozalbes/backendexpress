@@ -12,14 +12,22 @@ const appointmentsRouter = express.Router();
 // Create an appointment
 appointmentsRouter.post("/", async (req, res) => {
   try {
+    const { doctor, startTime } = req.body;
+
+    // Check if there is another appointment for the same doctor at the same time
+    const conflictingAppointment = await Appointment.findOne({ doctor, startTime });
+    if (conflictingAppointment) {
+      return res.status(400).json({ message: "The doctor already has an appointment at this time." });
+    }
+
     const newAppointment = new Appointment(req.body);
     const savedAppointment = await newAppointment.save();
 
     // Fetch the doctor and patient details
-    const doctor = await User.findById(savedAppointment.doctor);
+    const doctorDetails = await User.findById(savedAppointment.doctor);
     const patient = await User.findById(savedAppointment.patient);
-    const adjustedDate = subHours(new Date(savedAppointment.startTime), 2);
-    const formattedDate = format(adjustedDate, "PPPP p", { locale: es });
+    /* const adjustedDate = subHours(new Date(savedAppointment.startTime), 2); */
+    const formattedDate = format(savedAppointment.startTime, "PPPP p", { locale: es });
   
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -37,9 +45,9 @@ appointmentsRouter.post("/", async (req, res) => {
     // Define email options for doctor
     const doctorMailOptions = {
       from: "medimatch",
-      to: doctor.email,
+      to: doctorDetails.email,
       subject: "Nueva Cita Programada",
-      text: `Estimado Dr. ${doctor.name},\n\nTiene una nueva cita programada con ${patient.name} el ${formattedDate}.\n\nGracias,\nMediMatch`,
+      text: `Estimado Dr. ${doctorDetails.name},\n\nTiene una nueva cita programada con ${doctorDetails.name} el ${formattedDate}.\n\nGracias,\nMediMatch`,
 
     };
     

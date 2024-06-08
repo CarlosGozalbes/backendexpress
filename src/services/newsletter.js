@@ -9,11 +9,11 @@ newsletterRouter.post("/", async (req, res, next) => {
         if (!email) {
             return res.status(400).json({ message: "Please add an email address." });
         }
-        const base64Key = Buffer.from(`anystring:`+proccess.env.MAILCHIMP_API_KEY).toString(
+        const base64Key = Buffer.from(`anystring:`+process.env.MAILCHIMP_API_KEY).toString(
             "base64"
         );
         await axios.post(
-            `https://${proccess.env.MAILCHIMP_SERVER}.api.mailchimp.com/3.0/lists/${proccess.env.MAILCHIMP_LIST}/members`,
+            `https://${process.env.MAILCHIMP_SERVER}.api.mailchimp.com/3.0/lists/${process.env.MAILCHIMP_LIST}/members`,
             { email_address: email, status: "subscribed" }, // Make sure to enclose "subscribed" in quotes
             {
                 headers: {
