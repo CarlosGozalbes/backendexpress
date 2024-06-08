@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 3001
 
 # Comando para iniciar la aplicación
-CMD ["node", "-r","dotenv/config", "./src/server.js"]
+CMD ["node", "-r","dotenv/config", "./src/server.js"] 
