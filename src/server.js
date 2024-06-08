@@ -12,20 +12,19 @@ import appointmentsRouter from "./services/appointments/index.js";
 import usersRouter from "./services/users/index.js";
 import commentsRouter from "./services/comments/index.js";
 import ratingsRouter from "./services/ratings/index.js";
-import passport from "passport";
-import googleStrategy from "./auth/oauth.js";
+
 import newsletterRouter from "./services/newsletter.js";
 
 const server = express();
 const port = process.env.PORT || 3001;
 
 
-passport.use("google", googleStrategy)
+
 
 
 server.use(cors());
 server.use(express.json());
-server.use(passport.initialize())
+
 
 server.use("/newsletter", newsletterRouter);
 server.use("/appointments", appointmentsRouter);

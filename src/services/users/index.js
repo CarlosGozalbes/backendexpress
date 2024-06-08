@@ -10,7 +10,7 @@ import { adminOnlyMiddleware } from "../../auth/admin.js";
 import { authenticateUser } from "../../auth/tools.js"; // Changed from authenticateAuthor to authenticateUser
 import { JWTAuthMiddleware } from "../../auth/token.js";
 import mongoose from "mongoose";
-import passport from "passport";
+
 import upload from "./fileUpload.js";
 import Appointment from "../appointments/schema.js";
 cloudinary.config({ 
@@ -147,30 +147,8 @@ console.log(result);
   }
 })
 
-usersRouter.get(
-  "/googleLogin",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-); 
 
-usersRouter.get(
-  "/googleRedirect",
-  passport.authenticate("google"),
-  (req, res, next) => {
-    try {
-      if (req.user.role === "Admin") {
-        res.redirect(
-          `${process.env.FE_URL}/admin?accessToken=${req.user.token}`
-        );
-      } else {
-        res.redirect(
-          `${process.env.FE_URL}/profile?accessToken=${req.user.token}`
-        );
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+
 
 usersRouter.get(
   "/",
