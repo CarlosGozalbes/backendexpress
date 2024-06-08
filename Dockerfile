@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:20
 
 # Crear y establecer el directorio de trabajo
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm install --legacy-peer-deps
+RUN npm install 
 
 # Copiar el resto de los archivos
 COPY . .
